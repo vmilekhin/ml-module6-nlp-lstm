@@ -3,23 +3,22 @@
 Демонстрация полного пайплайна: от обучения LSTM на PyTorch до семантического поиска в PostgreSQL (pgvector).
 
 ## Что внутри
-1. 01_train.py — обучение LSTM предсказывать следующее слово на текстовом корпусе.
-2. model.py — архитектура WordLSTM (Embedding -> LSTM -> FC) и функция извлечения 32-мерного вектора encode().
-3. 05_pg_load.py — извлечение векторов для скользящих окон текста и загрузка в PostgreSQL.
-4. 06_pg_search.py — косинусный поиск по базе (оператор <=>).
+1. `01_train.py` — обучение LSTM предсказывать следующее слово на текстовом корпусе (IT-тематика).
+2. `model.py` — архитектура `WordLSTM` (Embedding -> LSTM -> FC) и функция извлечения 32-мерного вектора `encode()`.
+3. `05_pg_load.py` — извлечение векторов для скользящих окон текста и загрузка в PostgreSQL.
+4. `06_pg_search.py` — косинусный поиск по базе (оператор `<=>`).
 
 ## Результаты
-Модель успешно обучилась (loss упал с 4.13 до 2.77) и выучила контекст. 
-Поиск по запросу "каналы пропускают ионы натрия" находит фрагмент про "избирательный транспорт ионов натрия" со сходством 0.90.
+Модель успешно обучилась (loss упал с 4.56 до 3.43) на тексте про Python, C++, базы данных и нейросети. 
+Поиск по запросу *"Как обучить нейросеть на PyTorch"* находит фрагменты про PyTorch и Transformer со сходством **0.72**.
 
 ## Запуск
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install torch numpy psycopg[binary] pgvector
 
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install torch numpy psycopg[binary] pgvector
-
-    python 01_train.py
-    export PG_DSN='dbname=postgres user=postgres password=postgres host=127.0.0.1'
-    python 05_pg_load.py
-    python 06_pg_search.py --text "Туристы посетили музей" --top 3
-
+python 01_train.py
+export PG_DSN='dbname=postgres user=postgres password=postgres host=127.0.0.1'
+python 05_pg_load.py
+python 06_pg_search.py --text "Как обучить нейросеть на PyTorch" --top 3
